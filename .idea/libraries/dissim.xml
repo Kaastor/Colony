@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="dissim">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dissim.jar!/" />
+      <root url="jar://$PROJECT_DIR$/groovy-all-2.4.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/guava-17.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jspf.core-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/log4j-1.2.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/slf4j-api-1.7.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/slf4j-simple-1.7.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
