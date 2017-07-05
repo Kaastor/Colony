@@ -26,4 +26,12 @@ public class BasicReactiveEvent extends BasicSimStateChange<BasicAgent, Object> 
             e.printStackTrace();
         }
     }
+
+    protected void onTermination() throws SimControlException {
+        getSimEntity().onTermination();
+    }
+
+    protected void onInterruption() throws SimControlException {
+        getSimEntity().onInterruption();
+    }
 }

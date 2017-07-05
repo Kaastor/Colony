@@ -1,21 +1,24 @@
 package Test;
 
+import Test.Messages.BasicMessage;
 import agentsim.agent.BasicAgent;
 import agentsim.environment.BasicEnvironment;
 import agentsim.util.Int2D;
-import Test.Messages.GreetingMessage;
 import Test.Messages.Message;
 import Test.Messages.RequestPositionMessage;
 import Test.Messages.ResponsePositionMessage;
 import agentsim.util.MutableInt2D;
 import dissim.broker.IEvent;
+import dissim.broker.IEventFilter;
 import dissim.broker.IEventPublisher;
 import dissim.broker.IEventSubscriber;
 import dissim.random.SimGenerator;
 import dissim.simspace.core.SimControlException;
 
+import java.util.List;
 
-public class Agent extends BasicAgent implements IEventSubscriber {
+
+public class Agent extends BasicAgent implements IEventFilter, IEventSubscriber {
 
     private Beliefs beliefs;
 
@@ -38,7 +41,6 @@ public class Agent extends BasicAgent implements IEventSubscriber {
 
     private void initialize(){
         subscribeToMessage(RequestPositionMessage.class, this);
-        subscribeToMessage(GreetingMessage.class, this);
         subscribeToMessage(ResponsePositionMessage.class, this);
     }
     @Override
@@ -60,8 +62,12 @@ public class Agent extends BasicAgent implements IEventSubscriber {
 
         if(simTime() == 3 && getId() == 0)
             new RequestPositionMessage(this, new Message(this.getId(), 1));
-        if(simTime() == 3 && getId() == 1)
-            new GreetingMessage(this, new Message(this.getId(), 0));
+
+        if(simTime() == 5)
+            this.interrupt();
+
+        if(simTime() == 6)
+            this.terminate();
     }
 
     @Override
@@ -91,13 +97,6 @@ public class Agent extends BasicAgent implements IEventSubscriber {
                 }
             }
         }
-        if(iEvent instanceof GreetingMessage){
-            receiverId = ((GreetingMessage)iEvent).getTransitionParams().getReceiverAgent();
-            if(receiverId == getId()) {
-                senderId = ((GreetingMessage) iEvent).getTransitionParams().getSenderAgent();
-                System.out.println(simTime() + " " + getId() + " Hello AgentId: " + senderId);
-            }
-        }
         if(iEvent instanceof ResponsePositionMessage){
             receiverId = ((ResponsePositionMessage)iEvent).getTransitionParams().getReceiverAgent();
             if(receiverId == getId()) {
@@ -109,18 +108,10 @@ public class Agent extends BasicAgent implements IEventSubscriber {
         }
     }
 
-    private void moveRightSlant(){
-        Int2D positionInt2D = getEnvironment().getAgentPosition(this);
-        MutableInt2D newPosition = new MutableInt2D(positionInt2D);
-        newPosition.moveByVector(1,1);
-        getEnvironment().setAgentPosition(new Int2D(newPosition), this);
-    }
-
-    private void moveLeftSlant(){
-        Int2D positionInt2D = getEnvironment().getAgentPosition(this);
-        MutableInt2D newPosition = new MutableInt2D(positionInt2D);
-        newPosition.moveByVector(1,1);
-        getEnvironment().setAgentPosition(new Int2D(newPosition), this);
+    @Override
+    public List<IEventSubscriber> filter(IEvent iEvent) {
+       //TODO filter wiadomości
+        return null;
     }
 
     private void randomWalk(){
@@ -135,5 +126,15 @@ public class Agent extends BasicAgent implements IEventSubscriber {
 
     private void teleportTo(Int2D position){
         getEnvironment().setAgentPosition(position, this);
+    }
+
+    @Override
+    protected void onInterruption() throws SimControlException {
+        System.out.println(simTime() + " " + getId() + " onInterruption");
+    }
+
+    @Override
+    protected void onTermination() throws SimControlException {
+        System.out.println(simTime() + " " + getId() + " onTermination");
     }
 }

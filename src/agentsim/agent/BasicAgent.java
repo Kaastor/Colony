@@ -79,6 +79,20 @@ public abstract class BasicAgent extends BasicSimEntity implements Observer {
         }
     }
 
+    public abstract void act() throws SimControlException;
+
+    public abstract void decisionMaker() throws SimControlException;
+
+    @Override
+    public void notification(Class aClass, Observable observable){
+        try {
+            decisionMaker();
+        }
+        catch (SimControlException e){
+            e.printStackTrace();
+        }
+    }
+
     public BasicReactiveProcess getReactiveProcess() {
         return reactiveProcess;
     }
@@ -94,6 +108,7 @@ public abstract class BasicAgent extends BasicSimEntity implements Observer {
     public void subscribeToMessage(Class messageClass, IEventSubscriber subscriber){
         getCommunicationBroker().subscribe(messageClass, subscriber);
     }
+
     public int getId() {
         return id;
     }
@@ -106,19 +121,26 @@ public abstract class BasicAgent extends BasicSimEntity implements Observer {
         this.environment = environment;
     }
 
-    public abstract void act() throws SimControlException;
-
-    public abstract void decisionMaker() throws SimControlException;
-
-    @Override
-    public void notification(Class aClass, Observable observable){
-        try {
-            decisionMaker();
-        }
-        catch (SimControlException e){
-            e.printStackTrace();
+    public final boolean interrupt() throws SimControlException {
+        if (oneShot)
+            return reactiveEvent.interrupt();
+        else {
+            System.out.println(" interrupt - process " + reactiveProcess.getSimStatus());
+            return reactiveProcess.interrupt();//nie zmienia na INTERRUPTED
         }
     }
+
+    protected void onInterruption() throws SimControlException {
+    }
+
+    public final boolean terminate() throws SimControlException {
+        if (oneShot)
+            return reactiveEvent.terminate();
+        else
+            return reactiveProcess.terminate();
+    }
+
+    protected void onTermination() throws SimControlException { }
 
     @Override
     public String toString() {

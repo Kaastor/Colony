@@ -84,6 +84,10 @@ public class BasicEnvironment {
         return true;
     }
 
+    public int distanceBetween(Int2D position1, Int2D position2){
+        return (int)Math.hypot(position1.getX()-position2.getX(), position1.getY()-position2.getY());
+    }
+
     private boolean positionInBounds(Int2D position){
         return position.getX() >=0 && position.getX() < width &&
                 position.getY() >=0 && position.getY() < height;

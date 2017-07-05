@@ -5,10 +5,10 @@ import agentsim.agent.BasicAgent;
 import dissim.simspace.core.BasicSimStateChange;
 import dissim.simspace.core.SimControlException;
 
-public class ResponsePositionMessage extends BasicSimStateChange<BasicAgent, Message> {
+public class ResponsePositionMessage extends BasicMessage {
 
     public ResponsePositionMessage(BasicAgent entity, Message message) throws SimControlException {
-        super(entity, 0, message);
+        super(entity, message);
     }
 
     @Override

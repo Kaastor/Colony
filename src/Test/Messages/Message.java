@@ -7,7 +7,7 @@ public class Message {
 
     private final int senderAgent;
     private final int receiverAgent;
-    private Int2D goalPosition;
+    private final Int2D goalPosition;
 
     public Message(int senderAgent, int receiverAgent, Int2D goalPosition) {
         this.senderAgent = senderAgent;
@@ -18,6 +18,7 @@ public class Message {
     public Message(int senderAgent, int receiverAgent) {
         this.senderAgent = senderAgent;
         this.receiverAgent = receiverAgent;
+        this.goalPosition = null;
     }
 
     public int getSenderAgent() {
@@ -30,10 +31,6 @@ public class Message {
 
     public Int2D getGoalPosition() {
         return goalPosition;
-    }
-
-    public void setGoalPosition(Int2D goalPosition) {
-        this.goalPosition = goalPosition;
     }
 
     @Override
